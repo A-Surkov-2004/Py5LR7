@@ -35,6 +35,6 @@
 ![image](https://github.com/user-attachments/assets/d91199c1-bee9-4eb0-b0db-e5f7eb418f4b)
 
 
-Но оно заполниться не позднее чем через 5 секунд.
+Но оно заполниться не позднее чем через 5 секунд, при обновлении данных на сервере.
 
 ![image](https://github.com/user-attachments/assets/40d75218-4193-434e-b773-b791770312ee)
