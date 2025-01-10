@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-import time
+import json
+import curgetter
 from abc import ABC, abstractmethod
-from random import randrange
 from typing import List
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 
-import jsoner
 
 class Subject(ABC):
     """
@@ -59,6 +58,9 @@ class ConcreteSubject(Subject):
     def __init__(self):
         self.last = None
         self.data = None
+        self.cc = curgetter.MyClass()
+        self.cc.delay = 0
+        self.cc.tracking_currencies = ['R01235', 'R01239', 'R01375']
 
     def attach(self, observer: Observer) -> None:
         print("Subject: Attached an observer.")
@@ -76,8 +78,6 @@ class ConcreteSubject(Subject):
         Запуск обновления в каждом подписчике.
         """
 
-
-
         print("Subject: Notifying observers...")
         socketio.emit('response', self.data)
         for observer in self._observers:
@@ -92,12 +92,12 @@ class ConcreteSubject(Subject):
         """
 
         print("\nSubject: I'm doing something important.")
-        now = jsoner.getjson()
+
+        cin = self.cc.get_currencies()
+        now = json.loads(str(cin).replace('"', '').replace("'", '"').replace('(', '{').replace(')', '}'))
 
         self.data = f'USD:{now[0]['USD']['value']}.{now[0]['USD']['fractions']}, EUR:{now[1]['EUR']['value']}.{now[1]['EUR']['fractions']}, CNY:{now[2]['CNY']['value']}.{now[2]['CNY']['fractions']}'
         self.last = now
-
-
 
         print(f"Subject: My state has just changed to: {self.data}")
         self.notify()
@@ -122,10 +122,10 @@ class Observer(ABC):
 они прикреплены.
 """
 
-
 app = Flask(__name__)
 
 socketio = SocketIO(app)
+
 
 @app.route('/USD')
 def usd():
@@ -153,7 +153,6 @@ def handle_connect():
 
 
 if __name__ == "__main__":
-
     subject = ConcreteSubject()
 
     scheduler = BackgroundScheduler()
