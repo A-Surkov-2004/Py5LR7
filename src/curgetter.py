@@ -70,8 +70,11 @@ class BaseClass:
                     valute_charcode] = f'''('name':'{valute_cur_name}', 'value':'{value[0]}', 'fractions':'{value[1]}')'''
                 result.append(valute)
 
-        return result
+        if len(result):
+            return result
+        else:
+            return [{'R9999': None}]
 
 
-class MyClass(BaseClass, metaclass=Singleton):
+class CurGetter(BaseClass, metaclass=Singleton):
     pass

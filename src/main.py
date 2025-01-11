@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-import curgetter
+from src import curgetter
 from abc import ABC, abstractmethod
 from typing import List
 from flask import Flask, render_template
@@ -56,9 +56,8 @@ class ConcreteSubject(Subject):
     """
 
     def __init__(self):
-        self.last = None
         self.data = None
-        self.cc = curgetter.MyClass()
+        self.cc = curgetter.CurGetter()
         self.cc.delay = 0
         self.cc.tracking_currencies = ['R01235', 'R01239', 'R01375']
 
@@ -97,7 +96,6 @@ class ConcreteSubject(Subject):
         now = json.loads(str(cin).replace('"', '').replace("'", '"').replace('(', '{').replace(')', '}'))
 
         self.data = f'USD:{now[0]['USD']['value']}.{now[0]['USD']['fractions']}, EUR:{now[1]['EUR']['value']}.{now[1]['EUR']['fractions']}, CNY:{now[2]['CNY']['value']}.{now[2]['CNY']['fractions']}'
-        self.last = now
 
         print(f"Subject: My state has just changed to: {self.data}")
         self.notify()
